@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+# risultati rigenerabili con run.py / optimize.py
+output/
+# prezzi scaricati da Yahoo Finance: si riscaricano al primo avvio (non vanno ridistribuiti)
+data/
