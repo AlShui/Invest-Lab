@@ -8,9 +8,9 @@ A Python feasibility study: it downloads ETF prices, applies classic investment 
 
 > ⚠️ Study project. **This is not financial advice**: past performance does not guarantee future results.
 
-The charts and console output are in Italian ("netto" = net, "senza costi e tasse" = before costs and taxes).
+The program itself prints its reports in Italian; the console screenshot below is translated for readability.
 
-![Net and gross return of each strategy](docs/img/rendimenti_ucits.png)
+![Net and gross return of each strategy](docs/img/en/rendimenti_ucits.png)
 
 ## Key findings
 
@@ -22,17 +22,17 @@ The charts and console output are in Italian ("netto" = net, "senza costi e tass
    pays once at the end, and the deferred tax keeps compounding in the meantime. Broker fees cost about
    0.2 percentage points a year; taxes about 2.5.
 
-   ![Where the edge disappears](docs/img/tasse_usa.png)
+   ![Where the edge disappears](docs/img/en/tasse_usa.png)
 
 3. **Trend-following really does cut crashes** (max drawdown -34% instead of -57% over 46 years),
    but pays for it with 2-3 points of return per year. It is a choice about risk tolerance, not a way to earn more.
 
-   ![Momentum vs buy & hold since 1981](docs/img/curva_usa.png)
+   ![Momentum vs buy & hold since 1981](docs/img/en/curva_usa.png)
 
 4. **If you want a mixed portfolio (e.g. 60% stocks / 40% bonds), rebalance it with new contributions**
    instead of selling: it returns more than yearly rebalancing, with about half the orders.
 
-   ![60/40 with a monthly savings plan](docs/img/pac_60_40.png)
+   ![60/40 with a monthly savings plan](docs/img/en/pac_60_40.png)
 
 ### Main figures (UCITS ETFs, single 10,000 € investment)
 
@@ -66,7 +66,7 @@ On the first run prices are downloaded from Yahoo Finance and cached in `data/`;
 Results go to `output/<universe>/`: `report.md` (tables), `curva_*.png` (equity curve and drawdown),
 `ordini_*.csv` (every single order with its fees and taxes).
 
-![run.py output](docs/img/terminale.png)
+![run.py output (translated)](docs/img/en/terminale.png)
 
 ## How it works
 
