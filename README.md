@@ -1,138 +1,142 @@
-# App Investimenti — conviene fare trading con gli ETF in Italia?
+# Invest Lab — does trading ETFs pay off for an Italian investor?
 
-Test di fattibilità in Python: scarica i prezzi di alcuni ETF, applica strategie di investimento
-classiche (medie mobili, momentum, dual momentum, RSI, ribilanciamento) e le confronta con il
-semplice **compra e tieni** (buy & hold), **dopo commissioni del broker, tasse italiane al 26% e bollo**.
+**English** · [Italiano](README.it.md)
 
-> ⚠️ Progetto di studio. **Non è consulenza finanziaria**: i risultati passati non garantiscono quelli futuri.
+A Python feasibility study: it downloads ETF prices, applies classic investment strategies
+(moving averages, momentum, dual momentum, RSI, rebalancing) and compares them with plain
+**buy & hold**, **after broker fees, Italian capital gains tax (26%) and stamp duty**.
 
-![Rendimento netto e lordo delle strategie](docs/img/rendimenti_ucits.png)
+> ⚠️ Study project. **This is not financial advice**: past performance does not guarantee future results.
 
-## In breve: cosa è emerso
+The charts and console output are in Italian ("netto" = net, "senza costi e tasse" = before costs and taxes).
 
-1. **Nessuna strategia batte il buy & hold dopo costi e tasse**: né sugli ETF UCITS (2009-2026), né
-   sullo storico USA dal 1980, né ottimizzando i parametri (con verifica out-of-sample e walk-forward),
-   né con un piano di accumulo (PAC) da 500 €/mese.
-2. **Il colpevole sono le tasse, non le commissioni.** Prima delle tasse, nel 1981-2002 momentum e
-   medie mobili battevano il buy & hold. Chi vende spesso paga il 26% subito su ogni guadagno; chi tiene
-   lo paga una volta sola alla fine, e intanto quei soldi continuano a rendere. Le commissioni
-   Fineco pesano circa 0,2 punti l'anno; le tasse circa 2,5.
+![Net and gross return of each strategy](docs/img/rendimenti_ucits.png)
 
-   ![Dove sparisce il vantaggio](docs/img/tasse_usa.png)
+## Key findings
 
-3. **Le strategie di trend riducono davvero i crolli** (perdita massima -34% invece di -57% su 46 anni),
-   ma lo pagano con 2-3 punti di rendimento in meno all'anno. È una scelta di tolleranza al rischio, non un modo per guadagnare di più.
+1. **No strategy beats buy & hold after costs and taxes**: not on UCITS ETFs (2009-2026), not on
+   US history since 1980, not after parameter optimization (with out-of-sample and walk-forward checks),
+   and not with a 500 €/month savings plan.
+2. **Taxes are the culprit, not fees.** Before taxes, momentum and moving averages beat buy & hold
+   in 1981-2002. A strategy that sells often pays 26% on every gain right away; a buy & hold investor
+   pays once at the end, and the deferred tax keeps compounding in the meantime. Broker fees cost about
+   0.2 percentage points a year; taxes about 2.5.
 
-   ![Momentum vs buy & hold dal 1981](docs/img/curva_usa.png)
+   ![Where the edge disappears](docs/img/tasse_usa.png)
 
-4. **Se si vuole un portafoglio misto (es. 60% azioni / 40% obbligazioni), conviene ribilanciarlo con i versamenti**
-   invece di vendere: rende di più del ribilanciamento annuale con circa metà degli ordini.
+3. **Trend-following really does cut crashes** (max drawdown -34% instead of -57% over 46 years),
+   but pays for it with 2-3 points of return per year. It is a choice about risk tolerance, not a way to earn more.
 
-   ![60/40 con PAC](docs/img/pac_60_40.png)
+   ![Momentum vs buy & hold since 1981](docs/img/curva_usa.png)
 
-### Numeri principali (ETF UCITS, capitale unico 10.000 €)
+4. **If you want a mixed portfolio (e.g. 60% stocks / 40% bonds), rebalance it with new contributions**
+   instead of selling: it returns more than yearly rebalancing, with about half the orders.
 
-| Strategia | Rendimento annuo netto | Perdita massima | Ordini | Benchmark |
+   ![60/40 with a monthly savings plan](docs/img/pac_60_40.png)
+
+### Main figures (UCITS ETFs, single 10,000 € investment)
+
+| Strategy | Net annual return | Max drawdown | Orders | Benchmark |
 |---|---|---|---|---|
-| Medie mobili 50/200 | +4,9% | -38% | 49 | B&H SWDA +10,7% |
-| Momentum 12 mesi | +5,3% | -34% | 37 | B&H SWDA +10,9% |
-| RSI 14 30/70 | +4,6% | -25% | 65 | B&H SWDA +11,0% |
-| Dual momentum USA/Europa/Bond | +6,7% | -34% | 61 | B&H SWDA +10,7% |
-| Uscita solo nei crolli | +8,5% | -41% | 5 | B&H SWDA +10,6% |
-| 60/40 ribilanciato annuale | +6,6% | -22% | 27 | B&H 60/40 +8,4% |
+| Moving average crossover 50/200 | +4.9% | -38% | 49 | B&H SWDA +10.7% |
+| 12-month momentum | +5.3% | -34% | 37 | B&H SWDA +10.9% |
+| RSI 14 30/70 | +4.6% | -25% | 65 | B&H SWDA +11.0% |
+| Dual momentum US/Europe/Bonds | +6.7% | -34% | 61 | B&H SWDA +10.7% |
+| Exit only on crashes | +8.5% | -41% | 5 | B&H SWDA +10.6% |
+| 60/40 rebalanced yearly | +6.6% | -22% | 27 | B&H 60/40 +8.4% |
 
-Ogni strategia è confrontata con il buy & hold a partire dallo stesso giorno. Report completi in `output/` dopo l'esecuzione.
+Each strategy is compared with buy & hold starting on the same day. Full reports are written to `output/` when you run it.
 
-## Avvio
+## Getting started
 
-Serve Python 3.11+ (testato con 3.13).
+Requires Python 3.11+ (tested with 3.13).
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 
-.\.venv\Scripts\python.exe run.py                              # ETF UCITS, capitale unico
-.\.venv\Scripts\python.exe run.py --universo usa               # storico lungo USA (1980-oggi)
-.\.venv\Scripts\python.exe run.py --mensile 500                # con PAC da 500 €/mese
-.\.venv\Scripts\python.exe optimize.py [--universo usa]        # ottimizzazione + walk-forward
-.\.venv\Scripts\python.exe make_charts.py                      # rigenera le immagini di questo README
+.\.venv\Scripts\python.exe run.py                              # UCITS ETFs, single investment
+.\.venv\Scripts\python.exe run.py --universo usa               # long US history (1980-today)
+.\.venv\Scripts\python.exe run.py --mensile 500                # with a 500 €/month savings plan
+.\.venv\Scripts\python.exe optimize.py [--universo usa]        # optimization + walk-forward
+.\.venv\Scripts\python.exe make_charts.py                      # regenerate the images in this README
 ```
 
-Al primo avvio i prezzi vengono scaricati da Yahoo Finance e salvati in `data/` (cache); `--refresh` li riscarica.
-I risultati finiscono in `output/<universo>/`: `report.md` (tabelle), `curva_*.png` (andamento e drawdown),
-`ordini_*.csv` (ogni singolo ordine con commissioni e tasse).
+On the first run prices are downloaded from Yahoo Finance and cached in `data/`; `--refresh` downloads them again.
+Results go to `output/<universe>/`: `report.md` (tables), `curva_*.png` (equity curve and drawdown),
+`ordini_*.csv` (every single order with its fees and taxes).
 
-![Output di run.py](docs/img/terminale.png)
+![run.py output](docs/img/terminale.png)
 
-## Come funziona
+## How it works
 
-| File | Cosa fa |
+| File | What it does |
 |---|---|
-| `investlab/config.py` | universi di ETF, commissioni, tasse, date di separazione dei dati |
-| `investlab/data.py` | download prezzi, cache, controllo qualità dati (salti anomali, prezzi fermi) |
-| `investlab/strategies.py` | le strategie: producono "pesi obiettivo" giorno per giorno |
-| `investlab/engine.py` | simulazione del conto: ordini, costi, costo medio, tasse, bollo, versamenti |
-| `investlab/metrics.py` | rendimento annuo (IRR), volatilità, drawdown, Sharpe |
-| `run.py` | esegue tutte le strategie e scrive il report |
-| `optimize.py` | ottimizzazione dei parametri con verifica out-of-sample e walk-forward |
-| `make_charts.py` | genera le immagini del README |
+| `investlab/config.py` | ETF universes, fees, taxes, data split dates |
+| `investlab/data.py` | price download, cache, data quality checks (abnormal jumps, stale prices) |
+| `investlab/strategies.py` | the strategies: each one produces daily "target weights" |
+| `investlab/engine.py` | account simulation: orders, fees, average cost, taxes, stamp duty, contributions |
+| `investlab/metrics.py` | annual return (IRR), volatility, drawdown, Sharpe |
+| `run.py` | runs every strategy and writes the report |
+| `optimize.py` | parameter optimization with out-of-sample and walk-forward validation |
+| `make_charts.py` | generates the README images |
 
-Il motore è scritto da zero invece di usare librerie come vectorbt o backtrader: la fiscalità italiana
-(costo medio, minusvalenze ETF non compensabili, bollo) è il cuore del test e doveva essere trasparente.
+The engine is written from scratch instead of using libraries such as vectorbt or backtrader: Italian taxation
+(average cost basis, non-offsettable ETF losses, stamp duty) is the core of the test and had to be transparent.
 
-### Ipotesi di realismo
+### Realism assumptions
 
-- **Esecuzione**: la decisione si prende sul prezzo di chiusura, l'ordine si esegue alla chiusura del giorno dopo (nessuna "sbirciata al futuro").
-- **Commissioni Fineco**: 0,19% dell'ordine (min 2,95 €, max 19 €) + spread 0,10%. Ordini sotto 200 € non vengono eseguiti.
-- **Tasse**: 26% sulla plusvalenza a ogni vendita, sul costo medio ponderato (come fa il broker in regime amministrato).
-  Le minusvalenze da ETF **non** compensano plusvalenze da ETF: nel report sono "Minus perse".
-  Semplificazione prudente: 26% anche sugli ETF obbligazionari (in realtà la quota in titoli di Stato è al 12,5%).
-- **Bollo**: 0,2% annuo sul valore dei titoli.
-- **Liquidazione finale**: alla fine si vende tutto, così anche il buy & hold paga le sue tasse e il confronto è alla pari.
-- **Fuori mercato**: quando una strategia esce, compra un ETF monetario (XEON), non resta a 0%.
-- **PAC**: il versamento arriva il primo giorno di borsa del mese. Il benchmark lo investe secondo i pesi iniziali;
-  il "ribilanciamento coi versamenti" lo usa per comprare solo ciò che è rimasto sotto il peso obiettivo.
+- **Execution**: decisions use the closing price; orders fill at the next day's close (no look-ahead).
+- **Fees (Fineco)**: 0.19% of the order (min 2.95 €, max 19 €) + 0.10% bid-ask spread. Orders below 200 € are skipped.
+- **Taxes**: 26% on the gain at every sale, on the weighted average cost (as the broker does under the Italian "regime amministrato").
+  Losses on ETFs **cannot** offset gains on ETFs: the report lists them as "Minus perse" (wasted losses).
+  Conservative simplification: 26% also on bond ETFs (in reality the government-bond share is taxed at 12.5%).
+- **Stamp duty**: 0.2% per year on the value of the holdings.
+- **Final liquidation**: everything is sold at the end, so buy & hold pays its taxes too and the comparison is fair.
+- **Out of the market**: when a strategy exits, it buys a money-market ETF (XEON) instead of sitting at 0%.
+- **Savings plan**: the contribution arrives on the first trading day of the month. The benchmark invests it at the
+  initial weights; "rebalancing with contributions" uses it to buy only what is below its target weight.
 
-### Universi di test (`--universo`)
+### Test universes (`--universo`)
 
-| Universo | Strumenti | Periodo | A cosa serve |
+| Universe | Instruments | Period | Purpose |
 |---|---|---|---|
-| `ucits` (default) | SWDA, CSSPX, SMEA, XGLE, XEON | 2009-oggi | ETF ad accumulazione acquistabili su Borsa Italiana |
-| `usa` | VFINX (S&P 500), VEURX (Europa), VBMFX (bond), T-bill 3 mesi | 1980-oggi | solo studio: include 1987, 2000-2003, 2008 |
+| `ucits` (default) | SWDA, CSSPX, SMEA, XGLE, XEON | 2009-today | accumulating ETFs available on Borsa Italiana |
+| `usa` | VFINX (S&P 500), VEURX (Europe), VBMFX (bonds), 3-month T-bills | 1980-today | study only: covers 1987, 2000-2003, 2008 |
 
-Per SWDA e SMEA i prezzi storici vengono da Xetra/Amsterdam (stesso fondo, stesso ISIN, in EUR): a Milano nel
-2011-2012 erano poco scambiati e il prezzo restava fermo per giorni. Nell'universo `usa` si usano prezzi
-rettificati per i dividendi; costi e tasse restano quelli italiani, come se esistessero ETF equivalenti.
+For SWDA and SMEA historical prices come from Xetra/Amsterdam (same fund, same ISIN, in EUR): in Milan they
+traded so thinly in 2011-2012 that the price often stayed flat for days. The `usa` universe uses dividend-adjusted
+prices; fees and taxes stay Italian, as if equivalent ETFs existed.
 
-### Le metriche
+### Metrics
 
-- **Rendimento annuo netto**: rendimento medio annuo di ciò che resta in tasca dopo tutto (IRR: tiene conto di quando
-  sono stati versati i soldi; senza PAC coincide con il CAGR). È il numero più importante.
-- **Rendimento senza costi/tasse**: lo stesso, in un mondo senza attriti. La differenza è il costo dell'operatività.
-- **Max drawdown**: la perdita peggiore dal massimo precedente (-34% = 10.000 € diventati 6.600 €). Calcolato escludendo i versamenti.
-- **Volatilità** e **Sharpe**: quanto oscilla il valore in un anno e quanto rendimento si ottiene per unità di oscillazione.
+- **Net annual return**: average yearly return of what you actually keep (IRR: it accounts for when money was
+  paid in; without contributions it equals CAGR). This is the number that matters.
+- **Return before costs/taxes**: the same, in a frictionless world. The gap is the cost of trading.
+- **Max drawdown**: the worst fall from a previous peak (-34% = 10,000 € became 6,600 €). Contributions are excluded.
+- **Volatility** and **Sharpe**: how much the value swings in a year, and how much return you get per unit of swing.
 
-### Contro l'overfitting
+### Guarding against overfitting
 
-I parametri in `run.py` sono quelli "da manuale" (50/200 giorni, 12 mesi, RSI 14 con soglie 30/70), non ottimizzati.
-`optimize.py` prova griglie di parametri in due modi:
+The parameters in `run.py` are the textbook ones (50/200 days, 12 months, RSI 14 with 30/70 thresholds), not optimized.
+`optimize.py` searches parameter grids in two ways:
 
-- **In-sample → out-of-sample**: sceglie sui dati fino al 2018 (USA: 2002), giudica solo sui dati successivi.
-- **Walk-forward**: a inizio di ogni anno sceglie i parametri usando solo gli anni precedenti e li usa per quell'anno.
-  È la stima più onesta di cosa si sarebbe ottenuto davvero.
+- **In-sample → out-of-sample**: picks parameters on data up to 2018 (US: 2002) and judges them only on later data.
+- **Walk-forward**: at the start of each year, picks parameters using only the previous years and uses them for that year.
+  This is the most honest estimate of what you would actually have achieved.
 
-## Limiti
+## Limitations
 
-- Dati gratuiti (Yahoo Finance): possibili errori, controllati ma non eliminabili del tutto.
-- 16 anni di storico UCITS, quasi tutti in mercato rialzista; lo storico USA allunga il test ma non è investibile dall'Italia.
-- Fiscalità semplificata (aliquota unica 26%, nessun utilizzo di minusvalenze da altri strumenti).
-- Le strategie testate sono poche e classiche: il risultato non esclude che altre regole funzionino.
+- Free data (Yahoo Finance): errors are possible; they are checked but cannot be ruled out entirely.
+- 16 years of UCITS history, almost all in a bull market; the US history extends the test but is not investable from Italy.
+- Simplified taxation (flat 26%, losses never used against other instruments).
+- Only a few classic strategies are tested: the result does not rule out that other rules might work.
 
-## Riferimenti
+## References
 
 [vectorbt](https://github.com/polakowo/vectorbt) · [backtrader](https://github.com/mementum/backtrader) ·
 [LEAN](https://github.com/QuantConnect/Lean) · G. Antonacci, *Dual Momentum Investing* · E. Chan, *Quantitative Trading*
 
-## Licenza
+## License
 
 [MIT](LICENSE)
